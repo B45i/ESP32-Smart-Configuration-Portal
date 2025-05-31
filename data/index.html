@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Buddy Setup</title>
+    <style>
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+
+      body {
+        background-color: #111827; /* bg-gray-900 */
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 28rem;
+        padding: 2rem;
+        background-color: #1f2937; /* bg-gray-800 */
+        border-radius: 1rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .icon-container {
+        min-width: 4rem;
+        min-height: 4rem;
+        display: grid;
+        place-content: center;
+        background-color: rgba(34, 197, 94, 0.1); /* bg-green-500/10 */
+        border-radius: 9999px;
+        margin-bottom: 1rem;
+      }
+
+      .icon {
+        width: 3rem;
+        height: 3rem;
+        fill: #22c55e; /* text-green-500 */
+      }
+
+      h1 {
+        font-size: 1.875rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        color: #9ca3af; /* text-gray-400 */
+        margin-bottom: 0.5rem;
+      }
+
+      .company {
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        color: #d1d5db; /* text-gray-300 */
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #374151; /* bg-gray-700 */
+        border: 1px solid #4b5563; /* border-gray-600 */
+        border-radius: 0.5rem;
+        color: white;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #22c55e; /* border-green-500 */
+        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+      }
+
+      input.error {
+        border-color: #ef4444; /* border-red-500 */
+      }
+
+      .error-message {
+        color: #ef4444; /* text-red-500 */
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      button {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #22c55e; /* bg-green-500 */
+        color: white;
+        font-weight: 500;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: #16a34a; /* bg-green-600 */
+      }
+
+      button:disabled {
+        background-color: #6b7280; /* bg-gray-500 */
+        cursor: not-allowed;
+      }
+
+      .footer {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #6b7280; /* text-gray-500 */
+      }
+
+      .footer a {
+        color: #22c55e; /* text-green-500 */
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        color: #16a34a; /* text-green-600 */
+        text-decoration: underline;
+      }
+
+      .status-message {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        display: none;
+      }
+
+      .status-success {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
+
+      .status-error {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+
+      .loading {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Logo and Title -->
+      <div class="header">
+        <div class="icon-container">
+          <svg
+            stroke="#22c55e"
+            fill="none"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            height="2em"
+            width="2em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7 15h10v4a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2zm5-6a6 6 0 0 0-6-6H3v2a6 6 0 0 0 6 6h3m0 0a6 6 0 0 1 6-6h3v1a6 6 0 0 1-6 6h-3m0 3V9"
+            />
+          </svg>
+        </div>
+        <h1>Plant Buddy</h1>
+        <div class="subtitle">
+          <div>Your personal plant care assistant from</div>
+          <div class="company">ESCLabs</div>
+        </div>
+      </div>
+
+      <!-- Setup Form -->
+      <form id="setupForm">
+        <div class="form-group">
+          <label for="wifiSsid">WiFi SSID</label>
+          <input
+            type="text"
+            id="wifiSsid"
+            name="wifi_ssid"
+            placeholder="Enter your WiFi network name"
+          />
+          <div class="error-message" id="wifi_ssid_error">
+            WiFi SSID is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="wifiPassword">WiFi Password</label>
+          <input
+            type="password"
+            id="wifiPassword"
+            name="wifi_password"
+            placeholder="Enter your WiFi password"
+          />
+          <div class="error-message" id="wifi_password_error">
+            WiFi password is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="serverUrl">Server URL</label>
+          <input
+            type="url"
+            id="serverUrl"
+            name="server_url"
+            placeholder="Without the 'http://www' part"
+          />
+          <div class="error-message" id="server_url_error">
+            Valid server URL is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="accessToken">Server Access Token</label>
+          <input
+            type="text"
+            id="accessToken"
+            name="access_token"
+            placeholder="Enter your access token"
+          />
+          <div class="error-message" id="access_token_error">
+            Access token is required
+          </div>
+        </div>
+
+        <button type="submit" id="submitButton">Connect Device</button>
+      </form>
+
+      <!-- Status Message -->
+      <div id="statusMessage" class="status-message"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("setupForm");
+        const submitButton = document.getElementById("submitButton");
+        const statusMessage = document.getElementById("statusMessage");
+        const apiUrl = "/api/config";
+
+        const inputs = {
+          wifi_ssid: document.getElementById("wifiSsid"),
+          wifi_password: document.getElementById("wifiPassword"),
+          server_url: document.getElementById("serverUrl"),
+          access_token: document.getElementById("accessToken"),
+        };
+
+        // Add input event listeners to all fields for real-time validation
+        Object.keys(inputs).forEach((field) => {
+          inputs[field].addEventListener("input", function () {
+            validateField(field);
+            checkFormValidity();
+          });
+        });
+
+        // Fetch the current configuration on page load
+        async function fetchCurrentConfig() {
+          try {
+            showLoading(true);
+            const response = await fetch(apiUrl);
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Populate form fields with retrieved data
+            inputs.wifi_ssid.value = data.wifi_ssid || "";
+            inputs.wifi_password.value = data.wifi_password || "";
+            inputs.server_url.value = data.server_url || "";
+            inputs.access_token.value = data.access_token || "";
+
+            // Validate all fields after populating
+            Object.keys(inputs).forEach((field) => {
+              validateField(field);
+            });
+
+            checkFormValidity();
+            showLoading(false);
+          } catch (error) {
+            console.error("Error fetching configuration:", error);
+            showStatusMessage(
+              "Unable to load current configuration. You can still enter new settings.",
+              "error"
+            );
+            showLoading(false);
+          }
+        }
+
+        // Fetch config on page load
+        fetchCurrentConfig();
+
+        // Form submission handler
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          // Validate all fields
+          let isValid = true;
+          Object.keys(inputs).forEach((field) => {
+            if (!validateField(field)) {
+              isValid = false;
+            }
+          });
+
+          if (isValid) {
+            // Collect form data
+            const formData = new FormData(form);
+            const config = {};
+            formData.forEach((value, key) => {
+              config[key] = value;
+              if (key === "server_url") {
+                config[key] = value
+                  .replace("http://", "")
+                  .replace("https://", "")
+                  .replace("www.", "");
+              }
+            });
+
+            try {
+              showLoading(true);
+              const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams(config),
+              });
+
+              if (response.ok) {
+                showStatusMessage(
+                  "Configuration saved successfully! Your Plant Buddy will connect shortly.",
+                  "success"
+                );
+              } else {
+                showStatusMessage(
+                  "Failed to save configuration. Please try again.",
+                  "error"
+                );
+              }
+
+              showLoading(false);
+            } catch (error) {
+              console.error("Error saving configuration:", error);
+              showStatusMessage(
+                "Error saving configuration. Please check your connection and try again.",
+                "error"
+              );
+              showLoading(false);
+            }
+          }
+        });
+
+        // Validate individual field
+        function validateField(field) {
+          const value = inputs[field].value.trim();
+          const errorElement = document.getElementById(`${field}_error`);
+          let isValid = true;
+
+          // Reset error state
+          inputs[field].classList.remove("error");
+          errorElement.style.display = "none";
+
+          // Validation rules
+          switch (field) {
+            case "wifi_ssid":
+              if (!value) {
+                errorElement.textContent = "WiFi SSID is required";
+                isValid = false;
+              }
+              break;
+
+            case "wifi_password":
+              if (!value) {
+                errorElement.textContent = "WiFi password is required";
+                isValid = false;
+              }
+              break;
+
+            case "server_url":
+              if (!value) {
+                errorElement.textContent = "Server URL is required";
+                isValid = false;
+              } else {
+                try {
+                  new URL(value);
+                } catch (e) {
+                  errorElement.textContent = "Please enter a valid URL";
+                  isValid = false;
+                }
+              }
+              break;
+
+            case "access_token":
+              if (!value) {
+                errorElement.textContent = "Access token is required";
+                isValid = false;
+              }
+              break;
+          }
+
+          // Show error if validation failed
+          if (!isValid) {
+            inputs[field].classList.add("error");
+            errorElement.style.display = "block";
+          }
+
+          return isValid;
+        }
+
+        // Check if the entire form is valid
+        function checkFormValidity() {
+          let isValid = true;
+
+          Object.keys(inputs).forEach((field) => {
+            const value = inputs[field].value.trim();
+            if (!value) {
+              isValid = false;
+            }
+
+            if (field === "server_url" && value) {
+              try {
+                new URL(value);
+              } catch (e) {
+                isValid = false;
+              }
+            }
+          });
+
+          submitButton.disabled = !isValid;
+        }
+
+        // Show loading state
+        function showLoading(isLoading) {
+          if (isLoading) {
+            submitButton.disabled = true;
+            submitButton.innerHTML =
+              '<span class="loading"></span> Processing...';
+          } else {
+            checkFormValidity(); // This will set the correct disabled state
+            submitButton.innerHTML = "Connect Device";
+          }
+        }
+
+        // Show status message
+        function showStatusMessage(message, type) {
+          statusMessage.textContent = message;
+          statusMessage.className = "status-message";
+          statusMessage.classList.add(`status-${type}`);
+          statusMessage.style.display = "block";
+
+          // Auto-hide success messages after 5 seconds
+          if (type === "success") {
+            setTimeout(() => {
+              statusMessage.style.display = "none";
+            }, 5000);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
