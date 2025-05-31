@@ -25,12 +25,13 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
 
    - Activates when:
      - No existing configuration found
-     - Trigger pin is activated
-     - WiFi credentials are empty
+     - Trigger pin (GPIO 36) is pulled LOW
+     - Previous WiFi connection fails
    - Creates an Access Point named "ESP32-Setup"
    - Starts DNS server for captive portal functionality
-   - Automatically redirects all web requests to the setup portal
+   - Automatically opens the configuration portal (like a hotel WiFi page)
    - Provides an intuitive interface for WiFi setup
+   - All web requests are redirected to the setup portal until configured
 
 3. **Normal Operation** ✨
 
@@ -74,17 +75,16 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
 4. **Initial Setup**
    - Power on your ESP32
    - Connect to "ESP32-Setup" WiFi network
-   - Visit configuration portal at http://192.168.4.1
+   - Configuration portal will open automatically, if not go to `http://192.168.4.1`
    - Enter your WiFi credentials
    - Save and wait for device restart
 
 ## 📁 Project Structure
 
 ```
-├── firmware.ino          # Main ESP32 firmware
-├── data/
-│   └── index.html       # Web portal interface
-└── README.md            # Documentation
+├── firmware.ino          # Main ESP32 firmware with configuration logic
+└── data/
+    └── index.html       # Responsive web portal interface
 ```
 
 ## 🔧 Configuration Options
@@ -93,14 +93,6 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
   - SSID
   - Password
   - Additional server settings (if needed)
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to submit issues and enhancement requests.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🏷️ Tags
 
