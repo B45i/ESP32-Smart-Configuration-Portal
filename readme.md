@@ -12,6 +12,7 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
 - 🔄 Automatic fallback to setup mode
 - 🎯 Physical trigger pin for forced configuration mode
 - ⚡ Async web server for better performance
+- 🌐 DNS Captive Portal for seamless setup
 
 ## 🛠 How It Works
 
@@ -27,7 +28,8 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
      - Trigger pin is activated
      - WiFi credentials are empty
    - Creates an Access Point named "ESP32-Setup"
-   - Hosts a configuration web portal
+   - Starts DNS server for captive portal functionality
+   - Automatically redirects all web requests to the setup portal
    - Provides an intuitive interface for WiFi setup
 
 3. **Normal Operation** ✨
@@ -58,6 +60,7 @@ A robust and user-friendly ESP32 configuration system with a beautiful web porta
      - ESPAsyncWebServer
      - LittleFS
      - ArduinoJson
+     - DNSServer
 
 3. **Installation**
 
